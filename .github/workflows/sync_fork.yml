@@ -2,11 +2,11 @@ name: Fork 동기화
 
 on:
   schedule:
-    - cron: '*/6 * * * *'  # 6분마다 실행
-  workflow_dispatch:     # 수동 실행도 가능
+    - cron: '*/6 * * * *'  # 6분 마다 실행
+  workflow_dispatch:     # 수동 실행
 
 permissions:
-  contents: write
+  contents: write  # push를 위해 write 권한 필요
 
 jobs:
   sync:
@@ -16,7 +16,7 @@ jobs:
       - name: Checkout forked repo
         uses: actions/checkout@v4
         with:
-          persist-credentials: false  # personal token을 따로 사용할 경우 필요
+          token: ${{ secrets.GITHUB_TOKEN }}  # ✅ 인증 토큰 사용
 
       - name: Set up Git config
         run: |
@@ -25,14 +25,16 @@ jobs:
 
       - name: Add upstream and fetch
         run: |
-          git remote add upstream https://github.com/DONGSUKA/first_test.git #원본 저장소 주소
+          git remote add upstream https://github.com/DONGSUKA/first_test.git
           git fetch upstream
 
       - name: Merge upstream changes
         run: |
           git checkout main
-          git merge upstream/main --allow-unrelated-histories --no-edit || echo "✅ 병합할 내용 없음"
+          git merge upstream/main --no-edit || echo "✅ 병합할 변경사항 없음"
 
       - name: Push to fork
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git push origin main
