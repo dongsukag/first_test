@@ -1,4 +1,4 @@
-# 🙏 매일의 성경 구절
+# 🙏 매일의 성경 구절 🙏
 # [Daily Bible verse]
 ##
 <!-- START_BIBLE_VERSE -->
